@@ -1,0 +1,138 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family:'Segoe UI', Tahoma, Geneva, Verdana;
+}
+
+.bd {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+}
+
+.outher {
+  display: flex;
+  align-items: center;
+  gap: 70px; /* расстояние между текстом и картинкой */
+  max-width: 1250px;
+  width: 100%;
+}
+
+.text-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* кнопка и заголовки прижаты к левому краю */
+  gap: 20px;
+}
+
+.container {
+  text-align: left;
+}
+
+.container>h1 {
+  font-size: 2.2rem;
+  margin: 0;
+}
+
+.container>h2 {
+  font-size: 1.4rem;
+  margin: 8px 0 0;
+}
+
+.container>h3 {
+  font-size: 0.9rem;
+  margin: 8px 0 0;
+  font-weight: normal;
+}
+
+/* Кнопка */
+.btn {
+  margin-top: 15px; 
+  padding-bottom: 5px;
+}
+
+.button {
+  border-style: solid;
+  background-color: black;
+  padding: 10px 20px;
+  border-radius: 50px;
+  width: auto; /* убираем фиксированную ширину */
+  cursor: pointer;
+  display: inline-block;
+}
+
+.button a {
+  text-decoration: none;
+  color: white;
+  font-weight: normal;
+}
+
+
+/* Картинка */
+.outher img {
+  width: 600px;
+  height: auto;
+  max-width: 100%;
+  object-fit: contain;
+}
+
+.button:hover{
+  background-color: rgb(94, 91, 91);
+}
+
+/* Мобильная версия */
+@media only screen and (max-width: 1000px) {
+  
+  .bd {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+   }
+
+   .outher {
+    flex-direction: column;
+    text-align: center;
+    gap: 20px; /* увеличиваем расстояние для лучшего восприятия */
+    margin-top: 50px;
+   }
+   
+   .container h1 {
+     font-size: 4rem; /* уменьшаем размер для мобильных */
+   }
+   
+   .container h2 {
+     font-size: 2.5rem; /* уменьшаем размер для мобильных */
+   }
+   
+   .container h3 {
+     font-size: 1.5em; /* уменьшаем размер для мобильных */
+   }
+   
+   .text-content {
+     align-items: center;
+   }
+   
+   .container {
+     text-align: center; /* центрируем текст для мобильных */
+   }
+
+   .outher img {
+     width: 90%; /* делаем ширину изображения адаптивной */
+     max-width: none; /* убираем ограничение по максимальной ширине */
+   }
+
+   .button{
+    width: 300px;
+    height: 90px;
+    padding-top: 20px;
+   }
+
+   .button a{
+    font-size: 1.6rem;
+   }
+}
