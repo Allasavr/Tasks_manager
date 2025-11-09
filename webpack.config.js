@@ -45,6 +45,10 @@ module.exports = {
     filename: 'tasks.html',
   }),
   new HtmlWebpackPlugin({
+    template: './src/calendar.html',
+    filename: 'calendar.html',
+  }),
+  new HtmlWebpackPlugin({
     template: './src/img/404 error with people holding the numbers-bro.svg',
     filename: 'src/img/404 error with people holding the numbers-bro.svg',
   }),

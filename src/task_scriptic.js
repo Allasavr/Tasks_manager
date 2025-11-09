@@ -1,9 +1,10 @@
+// src/task_skript.js
+
 // Получаем элементы
 const modal = document.getElementById('addTaskModal');
 const openBtn = document.getElementById('openModalBtn');
 const cancelBtn = document.getElementById('cancelBtn');
 const taskInput = document.getElementById('taskInput');
-// Получаем элемент дедлайна
 const taskDeadlineInput = document.getElementById('taskDeadline');
 const todoColumn = document.getElementById('todo-column');
 const inProgressColumn = document.getElementById('in-progress-column');
@@ -15,12 +16,14 @@ const columns = {
   done: doneColumn
 };
 
+// --- ФУНКЦИЯ СОХРАНЕНИЯ ---
 function saveTasksToLocalStorage() {
   const tasks = [];
 
   // Собираем задачи из всех колонок
   Object.keys(columns).forEach(key => {
     const col = columns[key];
+    // ВАЖНО: Проходим только по карточкам, которые находятся непосредственно в колонке
     col.querySelectorAll('.task-card').forEach(card => {
       const content = card.querySelector('.task-content').textContent;
       const deadline = card.dataset.deadline;
@@ -36,22 +39,59 @@ function saveTasksToLocalStorage() {
     });
   });
 
-  localStorage.setItem('tasks', JSON.stringify(tasks));
+  try {
+    localStorage.setItem('tasks', JSON.stringify(tasks));
+    console.log("Задачи успешно сохранены в localStorage.");
+  } catch (e) {
+    console.error("Ошибка при сохранении задач в localStorage:", e);
+  }
 }
 
+// --- ФУНКЦИЯ ЗАГРУЗКИ ---
 function loadTasksFromLocalStorage() {
-  const savedTasks = localStorage.getItem('tasks');
-  if (!savedTasks) return;
+  let savedTasks = localStorage.getItem('tasks');
+  if (!savedTasks) {
+    console.log("Нет сохраненных задач в localStorage.");
+    return;
+  }
 
-  const tasks = JSON.parse(savedTasks);
+  let tasks;
+  try {
+    tasks = JSON.parse(savedTasks);
+  } catch (e) {
+    console.error("Ошибка при парсинге задач из localStorage:", e);
+    alert('Произошла ошибка при чтении задач. Проверьте консоль разработчика.');
+    return;
+  }
+
+  if (!Array.isArray(tasks)) {
+    console.warn("Данные в localStorage не являются массивом задач. Сброс.");
+    localStorage.removeItem('tasks'); // Очищаем, если данные битые
+    return;
+  }
+
+  // --- КЛЮЧЕВОЕ ИЗМЕНЕНИЕ: ОЧИСТКА КОЛОНОК ПЕРЕД ЗАГРУЗКОЙ ---
+  Object.keys(columns).forEach(key => {
+    columns[key].innerHTML = ''; // Очищаем содержимое колонки
+  });
+  // --- КОНЕЦ ИЗМЕНЕНИЯ ---
 
   tasks.forEach(task => {
     // Передаем дедлайн и дату начала при создании карточки
     const card = createTaskCard(task.text, task.status, task.deadline, task.startDate);
     const checkbox = card.querySelector('.checkboxs');
-    checkbox.checked = task.checked;
-    columns[task.status].appendChild(card);
+    if (checkbox) {
+        checkbox.checked = task.checked;
+    }
+    // Проверяем, что колонка существует перед добавлением
+    const targetColumn = columns[task.status];
+    if (targetColumn) {
+        targetColumn.appendChild(card);
+    } else {
+        console.warn(`Колонка для статуса "${task.status}" не найдена.`);
+    }
   });
+  console.log("Задачи успешно загружены из localStorage и отображены.");
 }
 
 function getTodayDate() {
@@ -94,7 +134,6 @@ function createTaskCard(text, status = 'todo', deadline = null, startDate = null
   deleteBtn.textContent = 'Удалить';
 
   card.appendChild(content);
-
   card.appendChild(dateInfo);
   card.appendChild(checkbox);
   card.appendChild(deleteBtn);
@@ -102,7 +141,7 @@ function createTaskCard(text, status = 'todo', deadline = null, startDate = null
   checkbox.addEventListener('change', () => handleCheckboxChange(card, checkbox));
   deleteBtn.addEventListener('click', () => {
     card.remove();
-    saveTasksToLocalStorage();
+    saveTasksToLocalStorage(); // Сохраняем после удаления
   });
 
   return card;
@@ -119,58 +158,64 @@ function handleCheckboxChange(card, checkbox) {
     nextColumn = columns['done'];
     card.dataset.status = 'done';
   } else {
+    // Если галочка снята или статус не меняется, не делаем ничего
     return;
   }
 
   if (nextColumn) {
     nextColumn.appendChild(card);
-    checkbox.checked = false;
-    saveTasksToLocalStorage();
+    checkbox.checked = false; // Снимаем галочку после перемещения
+    saveTasksToLocalStorage(); // Сохраняем после перемещения
   }
 }
 
+// --- ИСПРАВЛЕННАЯ ФУНКЦИЯ ЭКСПОРТА ---
 function exportTasksToICS() {
-  const savedTasks = localStorage.getItem('tasks');
+  let savedTasks = localStorage.getItem('tasks');
   if (!savedTasks) {
     alert('Нет задач для экспорта.');
     return;
   }
 
-  const tasks = JSON.parse(savedTasks);
+  let tasks;
+  try {
+    tasks = JSON.parse(savedTasks);
+  } catch (e) {
+    console.error("Ошибка при парсинге задач для экспорта:", e);
+    alert('Произошла ошибка при подготовке задач к экспорту. Проверьте консоль разработчика.');
+    return;
+  }
 
-  if (tasks.length === 0) {
+  if (!Array.isArray(tasks) || tasks.length === 0) {
     alert('Нет задач для экспорта.');
     return;
   }
 
- 
   let icsContent = "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//Ваше Приложение Задач//RU\r\n";
 
-  
   tasks.forEach(task => {
-    
-    let uid = `task-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`; 
+    let uid = `task-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
     let dtstamp = new Date().toISOString().replace(/\-|:|\..*/g, '');
     let summary = `Задача: ${task.text}`;
     let description = `Статус: ${task.status}. Дата начала: ${task.startDate || 'Не указана'}. Дедлайн: ${task.deadline || 'Не указан'}.`;
-    let dtstart = task.deadline || task.startDate; 
+    let dtstart = task.deadline || task.startDate;
 
     if (!dtstart) {
       console.warn(`Задача "${task.text}" не имеет даты начала или дедлайна, пропущена в ICS.`);
-      return;
+      return; // Пропускаем задачу без даты
     }
 
     const [year, month, day] = dtstart.split('-');
     if (!year || !month || !day) {
         console.warn(`Неверный формат даты для задачи "${task.text}": ${dtstart}, пропущена в ICS.`);
-        return; 
+        return; // Пропускаем задачу с неверной датой
     }
     const icsDate = `${year}${month}${day}`;
 
     icsContent += [
       "BEGIN:VEVENT",
       `UID:${uid}`,
-      `DTSTAMP:${dtstamp}Z`, 
+      `DTSTAMP:${dtstamp}Z`,
       `DTSTART;VALUE=DATE:${icsDate}`,
       `SUMMARY:${summary}`,
       `DESCRIPTION:${description}`,
@@ -178,15 +223,13 @@ function exportTasksToICS() {
     ].join("\r\n");
   });
 
-  
   icsContent += "END:VCALENDAR";
 
   const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8;' });
-  
   const filename = `tasks_export_${new Date().toISOString().slice(0, 10)}.ics`;
 
   const link = document.createElement("a");
-  if (link.download !== undefined) { 
+  if (link.download !== undefined) {
     const url = URL.createObjectURL(blob);
     link.setAttribute("href", url);
     link.setAttribute("download", filename);
@@ -194,21 +237,23 @@ function exportTasksToICS() {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-    URL.revokeObjectURL(url); 
+    URL.revokeObjectURL(url);
+    console.log("Файл ICS успешно подготовлен для скачивания.");
   } else {
     console.error("Браузер не поддерживает атрибут download для автоматического скачивания.");
     alert("Ваш браузер не поддерживает автоматическое скачивание файла. Пожалуйста, используйте другой браузер.");
   }
 }
 
+// --- ИНИЦИАЛИЗАЦИЯ ---
 document.addEventListener('DOMContentLoaded', () => {
-  loadTasksFromLocalStorage(); 
-  setupEventListeners();
-  setupExportEventListeners(); 
+  console.log("DOMContentLoaded сработал на tasks.html");
+  loadTasksFromLocalStorage(); // Загружаем задачи из localStorage
+  setupEventListeners();       // Устанавливаем обработчики
+  setupExportEventListeners(); // Устанавливаем обработчик экспорта
 });
 
 function setupEventListeners() {
-  // Обработчики для модального окна
   openBtn.addEventListener('click', () => {
     modal.showModal();
     taskInput.value = '';
@@ -235,25 +280,21 @@ function setupEventListeners() {
   modal.querySelector('form').addEventListener('submit', (e) => {
     e.preventDefault();
     const taskText = taskInput.value.trim();
-    // Получаем дедлайн
     const deadlineValue = taskDeadlineInput.value;
 
     if (taskText && deadlineValue) {
-
-    const startDateValue = getTodayDate();
-
-    const newCard = createTaskCard(taskText, 'todo', deadlineValue, startDateValue);
-    columns['todo'].appendChild(newCard); 
-    saveTasksToLocalStorage();
-    modal.close();
-  } else {
-
-    if (!taskText) {
-      alert("Пожалуйста, введите текст задачи.");
-    } else if (!deadlineValue) {
-      alert("Пожалуйста, выберите дедлайн для задачи.");
+      const startDateValue = getTodayDate();
+      const newCard = createTaskCard(taskText, 'todo', deadlineValue, startDateValue);
+      columns['todo'].appendChild(newCard);
+      saveTasksToLocalStorage(); // Сохраняем после добавления
+      modal.close();
+    } else {
+      if (!taskText) {
+        alert("Пожалуйста, введите текст задачи.");
+      } else if (!deadlineValue) {
+        alert("Пожалуйста, выберите дедлайн для задачи.");
+      }
     }
-  }
   });
 }
 
