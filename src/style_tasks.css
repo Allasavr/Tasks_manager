@@ -41,48 +41,6 @@ body {
   justify-content: center;
 }
 
-.column {
-  flex: 1;
-  min-width: 250px; /* чтобы не сжимались слишком сильно */
-  padding: 15px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  background: #fafafa;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-/* Стили карточек задач */
-.task-card {
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  background: white;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
-}
-
-.task-card input[type="checkbox"] {
-  accent-color: black;
-  width: 16px;
-  height: 16px;
-  align-self: flex-start;
-}
-
-.delete-btn {
-  background-color: black;
-  color: white;
-  padding: 5px 10px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 0.9rem;
-}
-
-
 .content{
   display: flex;
   flex-direction: column;
@@ -116,84 +74,22 @@ body {
   padding-top: 10px;
 }
 
-@media (max-width: 1000px) {
-  .column{
-    width: 800px;
-  }
-
-  .columns-container {
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-   }
-
-  .text-content {
-    align-items: center;
-  }
-
-  .container {
-    text-align: center;
-  }
-
-  .task-card {
-    padding: 16px;
-    font-size: 2rem; 
-    gap: 12px;
-    width: 400px;
-  }
-
-  .task-card input[type="checkbox"] {
-    width: 20px;
-    height: 20px;
-  }
-
-  .delete-btn {
-    padding: 8px 16px;
-    font-size: 1.8rem;
-    width: auto;
-    min-width: 90px;
-  }
-
-  .button1{
-    height: 100px;
-    width: 450px;
-    padding-top: 20px;
-  }
-
-  .button1 a{
-    font-size: 40px;
-  }
-
-  .header h1{
-    font-size: 70px;
-  }
-
-  .spany{
-    font-size: 50px;
-  }
-
-  .content>dialog {
-    width: 1000px;
-    padding: 25px;
-  }
-
-  .content>dialog h3 {
-    font-size: 60px;
-  }
-
-  .content > dialog :is(button[type="button"], button[type="submit"]) {
-    font-size: 50px;
-    padding: 20px 30px;
-  }
-
-  .content>dialog input[type="text"] {
-    font-size: 40px;
-    padding: 14px;
-  }
-
+.button2{
+  border-style: solid;
+  background-color: rgb(255, 255, 255);
+  padding-bottom: 10px;
+  border-radius: 50px;
+  width: 180px;
+  cursor: pointer;
+  margin-top: 30px;
+  padding-top: 10px;
 }
 
-/* Стили для модального окна */
+.button2:hover{
+  background-color: rgb(224, 224, 224);
+}
+
+
 dialog {
   border: none;
   border-radius: 10px;
@@ -269,4 +165,138 @@ dialog::backdrop {
 
 #openModalBtn:hover {
   background: #f9f9f9;
+}
+
+
+.column {
+  flex: 1;
+  min-width: 250px;
+  padding: 15px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  background: #fafafa;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  /* Убираем фиксированную высоту, чтобы колонка могла расти */
+  min-height: 200px; /* Можно оставить минимальную высоту для визуала */
+}
+
+/* Стили карточек задач */
+.task-card {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background: white;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+  /* Убираем фиксированную ширину */
+  width: auto;
+}
+
+.task-card input[type="checkbox"] {
+  accent-color: black;
+  width: 16px;
+  height: 16px;
+  align-self: flex-start;
+}
+
+.delete-btn {
+  background-color: black;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+dialog label[for="taskDeadline"] {
+  align-self: flex-start; /* Выравнивание по левому краю */
+  margin-top: 10px; /* Отступ сверху */
+  font-weight: bold; /* Жирный шрифт */
+}
+
+dialog input[type="date"] {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+  margin-bottom: 10px; /* Отступ снизу */
+}
+
+
+/* Мобильная версия */
+@media (max-width: 1000px) {
+  .column {
+    min-width: 300px; 
+    width: 100%;
+  }
+
+  .columns-container {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .task-card {
+    padding: 16px;
+    font-size: 2rem;
+    gap: 12px;
+    width: 100%;
+  }
+
+  .task-card input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+  }
+
+  .delete-btn {
+    padding: 8px 16px;
+    font-size: 1.5rem;
+    width: auto;
+    min-width: 90px;
+  }
+
+  .button1 {
+    height: 60px;
+    width: 100%;
+    max-width: 450px;
+    padding-top: 10px;
+  }
+
+  .button1 a {
+    font-size: 1.5rem;
+  }
+
+  .header h1 {
+    font-size: 2.5rem;
+  }
+
+  .spany {
+    font-size: 1.8rem;
+  }
+
+  .content > dialog {
+    width: 90vw;
+    max-width: 400px;
+    padding: 20px;
+  }
+
+  .content > dialog h3 {
+    font-size: 1.5rem;
+  }
+
+  .content > dialog :is(button[type="button"], button[type="submit"]) {
+    font-size: 2rem;
+    padding: 10px 15px;
+  }
+
+  .content > dialog input[type="text"] {
+    font-size: 2rem;
+    padding: 10px;
+  }
 }
