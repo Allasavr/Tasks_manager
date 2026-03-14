@@ -34,73 +34,46 @@
       <h3>Добавить задачу</h3>
       <form method="dialog">
         <input type="text" id="taskInput" placeholder="Введите задачу" required>
+         <label for="taskDeadline">Дедлайн:</label>
+        <input type="date" id="taskDeadline" name="taskDeadline"> 
         <button type="submit" value="add">Добавить</button>
         <button type="button" id="cancelBtn">Отмена</button>
       </form>
-   </dialog>
+    </dialog>
 
     <button id="openModalBtn"><span class="spany">+ Добавить задачу</span></button>
-    
+
     <div class="columns-container">
-       <!-- Колонка 1: Задачи -->
-       <div class="column">
-          <span class="spany">Задачи</span>
-         <div class="task-card">
-           Купить хлеб
-           <input type="checkbox" class="checkboxs" value="buy_bread">
-           <button class="delete-btn">Удалить</button>
-         </div>
-         <div class="task-card">
-           Сделать лабораторную
-           <input type="checkbox" class="checkboxs" value="lab_work">
-           <button class="delete-btn">Удалить</button>
-         </div>
-       </div>
-     
-       <!-- Колонка 2: В работе -->
-        <div class="column">
-          <span class="spany">В работе</span>
-        </div>
-     
-       <!-- Колонка 3: Выполнено -->
-        <div class="column">
-          <span class="spany">Выполнено</span>
-        </div>
+      
+      <div class="column" id="todo-column">
+        <span class="spany">Задачи</span>
+       
+      </div>
+
+      
+      <div class="column" id="in-progress-column">
+        <span class="spany">В работе</span>
+        
+      </div>
+
+      
+      <div class="column" id="done-column">
+        <span class="spany">Выполнено</span>
+        
+      </div>
     </div>
-   
+
+    <button id="exportICSBtn" class="button2">
+      <span class="spany">Экспорт в ICS</span>
+    </button>
 
     <div class="button1">
       <a href="main.html" class="btn">Вернуться на главную</a>
-    <div>
+    </div>
 
   </div>
 
-
-  <script>
-    const modal = document.getElementById('addTaskModal');
-    const openBtn = document.getElementById('openModalBtn');
-    const cancelBtn = document.getElementById('cancelBtn');
-
-    openBtn.addEventListener('click', () => {
-      modal.showModal(); 
-    });
-
-    cancelBtn.addEventListener('click', () => {
-      modal.close();
-    });
-
-    // Закрытие при клике вне окна
-    modal.addEventListener('click', (e) => {
-      const rect = modal.getBoundingClientRect();
-      if (
-        e.clientX < rect.left ||
-        e.clientX > rect.right ||
-        e.clientY < rect.top ||
-        e.clientY > rect.bottom
-      ) {
-        modal.close();
-      }
-    });
-  </script>
+  <script src="task_scriptic.js"></script>
+  <script src="bundle.js"></script>
 </body>
 </html>
