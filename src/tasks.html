@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>Основная страница</title>
+  <link href="style_tasks.css" rel="stylesheet" >
+  <link href="style_about.css" rel="stylesheet">
+</head>
+
+<body>
+
+    <div class="nav-container">
+      <div class="drop">
+        <div class="burger"><span class="burger_item"></span></div>
+          <div class="navbar">
+            <a href="main.html" >Главная </a>
+            <a href="projects.html" >Проекты </a>
+            <a href="tasks.html" class="current">Список задач </a>
+            <a href="about.html" >О проекте </a>
+          </div>
+      </div>
+    </div>
+
+  <div class="content">
+
+    <div class="header">
+      <img src="./img/free-icon-list-5709520.png" alt="Список задач">
+      <h1>Расширьте список задач</h1>
+    </div>
+
+    
+   <dialog id="addTaskModal">
+      <h3>Добавить задачу</h3>
+      <form method="dialog">
+        <input type="text" id="taskInput" placeholder="Введите задачу" required>
+        <button type="submit" value="add">Добавить</button>
+        <button type="button" id="cancelBtn">Отмена</button>
+      </form>
+   </dialog>
+
+    <button id="openModalBtn"><span class="spany">+ Добавить задачу</span></button>
+    
+    <div class="columns-container">
+       <!-- Колонка 1: Задачи -->
+       <div class="column">
+          <span class="spany">Задачи</span>
+         <div class="task-card">
+           Купить хлеб
+           <input type="checkbox" class="checkboxs" value="buy_bread">
+           <button class="delete-btn">Удалить</button>
+         </div>
+         <div class="task-card">
+           Сделать лабораторную
+           <input type="checkbox" class="checkboxs" value="lab_work">
+           <button class="delete-btn">Удалить</button>
+         </div>
+       </div>
+     
+       <!-- Колонка 2: В работе -->
+        <div class="column">
+          <span class="spany">В работе</span>
+        </div>
+     
+       <!-- Колонка 3: Выполнено -->
+        <div class="column">
+          <span class="spany">Выполнено</span>
+        </div>
+    </div>
+   
+
+    <div class="button1">
+      <a href="main.html" class="btn">Вернуться на главную</a>
+    <div>
+
+  </div>
+
+
+  <script>
+    const modal = document.getElementById('addTaskModal');
+    const openBtn = document.getElementById('openModalBtn');
+    const cancelBtn = document.getElementById('cancelBtn');
+
+    openBtn.addEventListener('click', () => {
+      modal.showModal(); 
+    });
+
+    cancelBtn.addEventListener('click', () => {
+      modal.close();
+    });
+
+    // Закрытие при клике вне окна
+    modal.addEventListener('click', (e) => {
+      const rect = modal.getBoundingClientRect();
+      if (
+        e.clientX < rect.left ||
+        e.clientX > rect.right ||
+        e.clientY < rect.top ||
+        e.clientY > rect.bottom
+      ) {
+        modal.close();
+      }
+    });
+  </script>
+</body>
+</html>
