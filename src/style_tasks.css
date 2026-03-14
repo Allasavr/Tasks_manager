@@ -70,7 +70,7 @@ body {
   border-radius: 50px;
   width: 180px;
   cursor: pointer;
-  margin-top: 30px;
+  margin-top: 15px;
   padding-top: 10px;
 }
 
@@ -262,10 +262,8 @@ dialog input[type="date"] {
   }
 
   .button1 {
-    height: 60px;
-    width: 100%;
-    max-width: 450px;
-    padding-top: 10px;
+    height: 80px;
+    width: auto;
   }
 
   .button1 a {
